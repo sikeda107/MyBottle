@@ -11,8 +11,8 @@ def hello():
     return "Hello World!"
 
 
-@route('/hello/<name>')
-def greet(name='Stranger'):
+@route('/hello/<name:re:[a-z]+')
+def greet(name):
     return template('Hello {{name}}, how are you?', name=name)
 
 
