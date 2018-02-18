@@ -23,4 +23,9 @@ def view_list():
     return template("list_tmpl", item_list=item_list)
 
 
+@route("/add", method=["GET", "POST"])
+def add_item():
+    return template("add_tmpl")
+
+
 run(reloader=True, host='localhost', port=8080)
