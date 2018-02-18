@@ -1,4 +1,4 @@
-from bottle import route, run, template
+from bottle import route, run, request, template
 import sqlite3
 
 @route("/")
@@ -25,7 +25,21 @@ def view_list():
 
 @route("/add", method=["GET", "POST"])
 def add_item():
-    return template("add_tmpl")
+    if request.method == "POST":
+        # POSTアクセスならDBに登録する
+        # フォームから入力(POST)されたアイテム名(データ)の取得
+        item_name = request.POST.getunicode("item_name")
+        connectdb = sqlite3.connect('items.sqlite3')
+        concursor = connectdb.cursor()
+        # 現在の最大IDの取得(fetchoneの戻り値はタプル)
+        new_id = concursor.execute("select max(id)+1 from items").fetchone()[0]
+        concursor.execute('insert into items values (?,?)', (new_id, item_name))
+        connectdb.commit()
+        connectdb.close()
+        return "SUCCESS"
+    else:
+        # GETアクセスならフォームの表示
+        return template("add_tmpl")
 
 
 run(reloader=True, host='localhost', port=8080)
