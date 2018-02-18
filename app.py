@@ -1,5 +1,6 @@
-from bottle import route, run, request, template
+from bottle import route, run, request, redirect, template
 import sqlite3
+
 
 @route("/")
 def index():
@@ -40,6 +41,19 @@ def add_item():
     else:
         # GETアクセスならフォームの表示
         return template("add_tmpl")
+
+
+# ルーティングを数字で制限
+@route("/del/<item_id:int>")
+def del_item(item_id):
+    connectdb = sqlite3.connect('items.sqlite3')
+    concursor = connectdb.cursor()
+    # 指定されたitem_idを元にDBデータを削除(delete文)
+    concursor.execute("delete from items where id=?", (item_id, ))
+    connectdb.commit()
+    connectdb.close()
+    # 削除処理後にリスト画面へ戻す
+    return redirect("/list")
 
 
 run(reloader=True, host='localhost', port=8080)
