@@ -1,4 +1,4 @@
-from bottle import route, run
+from bottle import route, run, template
 
 
 @route("/")
@@ -14,15 +14,7 @@ def view_list():
         {"id": 2, "name": "アイテム"},
         {"id": 3, "name": "item"},
     ]
-    # 表示用のHTMLファイルを組み立て
-    display_html = "<table border='1'>"
-    for item in item_list:
-        display_html += "<tr>"
-        display_html += "<td>{}</td>".format(item["id"])
-        display_html += "<td>{}</td>".format(item["name"])
-        display_html += "</tr>"
-    display_html += "</table>"
-    return display_html
+    return template("list_tmpl", item_list=item_list)
 
 
 run(reloader=True, host='localhost', port=8080)
