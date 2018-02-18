@@ -1,5 +1,5 @@
 from bottle import route, run, template
-
+import sqlite3
 
 @route("/")
 def index():
@@ -9,11 +9,17 @@ def index():
 # アイテム一覧
 @route("/list")
 def view_list():
-    item_list = [
-        {"id": 1, "name": "あいてむ"},
-        {"id": 2, "name": "アイテム"},
-        {"id": 3, "name": "item"},
-    ]
+    # items.sqlite3 に接続
+    connectdb = sqlite3.connect('items.sqlite3')
+    concursor = connectdb.cursor()
+    concursor.execute("select id,name from items order by id")
+    item_list = []
+    for row in concursor.fetchall():
+        item_list.append({
+            "id": row[0],
+            "name": row[1]
+        })
+        connectdb.close()
     return template("list_tmpl", item_list=item_list)
 
 
