@@ -37,7 +37,7 @@ def add_item():
         concursor.execute('insert into items values (?,?)', (new_id, item_name))
         connectdb.commit()
         connectdb.close()
-        return "SUCCESS"
+        return "<br>SUCCESS</br> <a href='/list'>一覧表示</a>"
     else:
         # GETアクセスならフォームの表示
         return template("add_tmpl")
